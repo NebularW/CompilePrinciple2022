@@ -1,41 +1,29 @@
 import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.io.*;
-import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws IOException {
+        //需要输入文件路径
         if (args.length < 1) {
             System.err.println("input path is required");
         }
+        //获取输入字符串
         String source = args[0];
         CharStream input = CharStreams.fromFileName(source);
+        //获取词法分析器和语法分析器
         SysYLexer sysYLexer = new SysYLexer(input);
+        CommonTokenStream tokens = new CommonTokenStream(sysYLexer);
+        SysYParser sysYParser = new SysYParser(tokens);
         //使用自行实现的ErrorListener
-        sysYLexer.removeErrorListeners();
+        sysYParser.removeErrorListeners();
         MyErrorListener myErrorListener = new MyErrorListener();
-        sysYLexer.addErrorListener(myErrorListener);
-        //如果没有错误，输出token，否则停止输出
-        List<? extends Token> tokens = sysYLexer.getAllTokens();
-        Vocabulary vocabulary = sysYLexer.getVocabulary();
-       if(!myErrorListener.getErrState()){
-           for (Token token : tokens) {
-               String type = vocabulary.getSymbolicName(token.getType());
-               String text = token.getText();
-               int line = token.getLine();
-               if (type.equals("INTEGR_CONST")) {
-                   if (text.startsWith("0x") || text.startsWith("0X")) {
-                       String original = text.substring(2);
-                       text = String.valueOf(Integer.parseInt(original, 16));
-                   } else if (text.startsWith("0") && text.length() > 1) {
-                       String original = text.substring(1);
-                       text = String.valueOf(Integer.parseInt(original, 8));
-                   }
-               }
-               System.err.println(type + " " + text + " at Line " + line + ".");
-
-           }
-       }
+        sysYParser.addErrorListener(myErrorListener);
+        //使用visitor
+        ParseTree tree = sysYParser.program();
+        MyVisitor visitor = new MyVisitor(sysYParser.getRuleNames(),sysYLexer.getVocabulary());
+        if(!myErrorListener.getErrState()) visitor.visit(tree);
     }
 
 }
