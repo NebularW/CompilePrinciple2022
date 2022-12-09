@@ -25,7 +25,7 @@ public class BaseScope implements Scope {
 
     @Override
     public Scope getEnclosingScope() {
-        return this.enclosingScope;
+        return this.enclosingScope == null ? this : this.enclosingScope;
     }
 
     public Map<String, Symbol> getSymbols() {
@@ -35,7 +35,6 @@ public class BaseScope implements Scope {
     @Override
     public void define(Symbol symbol) {
         symbols.put(symbol.getName(), symbol);
-        System.out.println("+" + symbol.getName());
     }
 
     @Override
@@ -43,7 +42,6 @@ public class BaseScope implements Scope {
         Symbol symbol = symbols.get(name);
         // 当前作用域找到了该符号
         if (symbol != null) {
-            System.out.println("*" + name);
             return symbol;
         }
         // 递归去父作用域查找
@@ -51,7 +49,6 @@ public class BaseScope implements Scope {
             return enclosingScope.resolve(name);
         }
         //没有找到
-        System.out.println("Cannot find " + name);
         return null;
     }
 

@@ -24,18 +24,14 @@ public class Main {
         SysYLexer sysYLexer = new SysYLexer(input);
         CommonTokenStream tokens = new CommonTokenStream(sysYLexer);
         SysYParser sysYParser = new SysYParser(tokens);
-        //使用自行实现的ErrorListener
-        sysYParser.removeErrorListeners();
-        MyErrorListener myErrorListener = new MyErrorListener();
-        sysYParser.addErrorListener(myErrorListener);
         //使用visitor
-//        ParseTree tree = sysYParser.program();
-//        MyVisitor visitor = new MyVisitor(sysYParser.getRuleNames(), sysYLexer.getVocabulary());
-//        if (!myErrorListener.getErrState()) visitor.visit(tree);
+        ParseTree tree = sysYParser.program();
+        MyVisitor visitor = new MyVisitor(sysYParser.getRuleNames(), sysYLexer.getVocabulary());
+        visitor.visit(tree);
 
 
         //使用listener
-        ParseTree tree = sysYParser.program();
+//        ParseTree tree = sysYParser.program();
         ParseTreeWalker treeWalker = new ParseTreeWalker();
         SymbolTableListener symbolTableListener = new SymbolTableListener();
         treeWalker.walk(symbolTableListener, tree);

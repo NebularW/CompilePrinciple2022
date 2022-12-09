@@ -6,17 +6,10 @@ import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class SymbolTableListener extends SysYParserBaseListener {
-    private final SymbolTableTreeGraph graph = new SymbolTableTreeGraph();
-
-    private GlobalScope globalScope =null;
+    private GlobalScope globalScope = null;
     private Scope currentScope = null;
     private int localScopeCounter = 0;
-
-    // Adding Code Below
-
-    public SymbolTableTreeGraph getGraph() {
-        return graph;
-    }
+    boolean error = false;
 
     // 以下是更改作用域
 
@@ -31,9 +24,15 @@ public class SymbolTableListener extends SysYParserBaseListener {
         String typeName = ctx.funcType().getText();
         globalScope.resolve(typeName);
         String funcName = ctx.IDENT().getText();
-        FunctionSymbol funcSymbol = new FunctionSymbol(funcName, currentScope);
-        currentScope.define(funcSymbol);
-        currentScope = funcSymbol;
+        if (currentScope!=null && currentScope.resolve(funcName) != null) {
+            error = true;
+            System.err.println("Error type 4 at Line " + ctx.getStart().getLine() + ": Redefined function: " + funcName);
+        }else{
+            FunctionSymbol funcSymbol = new FunctionSymbol(funcName, currentScope);
+            currentScope.define(funcSymbol);
+            currentScope = funcSymbol;
+        }
+
     }
 
     @Override
@@ -66,7 +65,7 @@ public class SymbolTableListener extends SysYParserBaseListener {
     public void exitConstDecl(SysYParser.ConstDeclContext ctx) {
         String typeName = ctx.bType().getText();
         Type type = (Type) globalScope.resolve(typeName);
-        for(SysYParser.ConstDefContext constDefContext: ctx.constDef()){
+        for (SysYParser.ConstDefContext constDefContext : ctx.constDef()) {
             String varName = constDefContext.IDENT().getText();
             VariableSymbol var = new VariableSymbol(varName, type);
             currentScope.define(var);
@@ -78,7 +77,7 @@ public class SymbolTableListener extends SysYParserBaseListener {
     public void exitVarDecl(SysYParser.VarDeclContext ctx) {
         String typeName = ctx.bType().getText();
         Type type = (Type) globalScope.resolve(typeName);
-        for(SysYParser.VarDefContext varDefContext: ctx.varDef()){
+        for (SysYParser.VarDefContext varDefContext : ctx.varDef()) {
             String varName = varDefContext.IDENT().getText();
             VariableSymbol var = new VariableSymbol(varName, type);
             currentScope.define(var);
@@ -101,7 +100,7 @@ public class SymbolTableListener extends SysYParserBaseListener {
     @Override
     public void visitTerminal(TerminalNode node) {
         Token token = node.getSymbol();
-        if(token.getType() == 33){
+        if (token.getType() == 33) {
             String varName = token.getText();
             currentScope.resolve(varName);
         }
