@@ -1,5 +1,9 @@
 parser grammar SysYParser;
 
+@header{
+package antlr;
+}
+
 options {
     tokenVocab = SysYLexer;
 }

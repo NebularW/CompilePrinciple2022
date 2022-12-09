@@ -1,4 +1,7 @@
-// Generated from java-escape by ANTLR 4.11.1
+// Generated from ./src/antlr/SysYParser.g4 by ANTLR 4.9.1
+
+package antlr;
+
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
@@ -9,7 +12,6 @@ import org.antlr.v4.runtime.tree.TerminalNode;
  * which can be extended to create a listener which only needs to handle a subset
  * of the available methods.
  */
-@SuppressWarnings("CheckReturnValue")
 public class SysYParserBaseListener implements SysYParserListener {
 	/**
 	 * {@inheritDoc}

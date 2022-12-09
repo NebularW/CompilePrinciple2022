@@ -1,5 +1,9 @@
 lexer grammar SysYLexer;
 
+@header{
+package antlr;
+}
+
 CONST : 'const';
 
 INT : 'int';

@@ -1,4 +1,7 @@
-// Generated from java-escape by ANTLR 4.11.1
+// Generated from ./src/antlr/SysYParser.g4 by ANTLR 4.9.1
+
+package antlr;
+
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**
@@ -112,13 +115,13 @@ public interface SysYParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitStmt(SysYParser.StmtContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SysYParser#exp}.
+	 * Visit a parse tree produced by .
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitExp(SysYParser.ExpContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SysYParser#cond}.
+	 * Visit a parse tree produced by .
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */

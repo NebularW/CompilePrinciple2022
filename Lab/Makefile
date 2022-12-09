@@ -32,6 +32,10 @@ test: compile
 
 
 clean:
+	rm -f src/antlr/*.tokens
+	rm -f src/antlr/*.interp
+	rm -f src/antlr/SysYLexer.java src/antlr/SysYParser.java src/antlr/SysYParserBaseListener.java src/antlr/SysYParserBaseVisitor.java src/antlr/SysYParserListener.java src/antlr/SysYParserVisitor.java
+	rm -rf classes
 	rm -f src/*.tokens
 	rm -f src/*.interp
 	rm -f src/SysYLexer.java src/SysYParser.java src/SysYParserBaseListener.java src/SysYParserBaseVisitor.java src/SysYParserListener.java src/SysYParserVisitor.java

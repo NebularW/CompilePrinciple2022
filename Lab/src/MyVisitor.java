@@ -1,3 +1,4 @@
+import antlr.SysYParserBaseVisitor;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.Vocabulary;
 import org.antlr.v4.runtime.tree.RuleNode;
@@ -5,7 +6,7 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.util.Objects;
 
-public class MyVisitor extends SysYParserBaseVisitor<Void>{
+public class MyVisitor extends SysYParserBaseVisitor<Void> {
     private final String[] ruleNames;
 
     private final Vocabulary vocabulary;

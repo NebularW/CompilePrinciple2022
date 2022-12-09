@@ -1,4 +1,7 @@
-// Generated from java-escape by ANTLR 4.11.1
+// Generated from ./src/antlr/SysYParser.g4 by ANTLR 4.9.1
+
+package antlr;
+
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
@@ -177,22 +180,22 @@ public interface SysYParserListener extends ParseTreeListener {
 	 */
 	void exitStmt(SysYParser.StmtContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SysYParser#exp}.
+	 * Enter a parse tree produced by .
 	 * @param ctx the parse tree
 	 */
 	void enterExp(SysYParser.ExpContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link SysYParser#exp}.
+	 * Exit a parse tree produced by .
 	 * @param ctx the parse tree
 	 */
 	void exitExp(SysYParser.ExpContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SysYParser#cond}.
+	 * Enter a parse tree produced by .
 	 * @param ctx the parse tree
 	 */
 	void enterCond(SysYParser.CondContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link SysYParser#cond}.
+	 * Exit a parse tree produced by .
 	 * @param ctx the parse tree
 	 */
 	void exitCond(SysYParser.CondContext ctx);
