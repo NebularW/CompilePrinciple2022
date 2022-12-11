@@ -1327,17 +1327,17 @@ public class SysYParser extends Parser {
 	}
 
 	public static class StmtContext extends ParserRuleContext {
-		public LValContext lVal() {
-			return getRuleContext(LValContext.class,0);
+		public StmtContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
 		}
-		public TerminalNode ASSIGN() { return getToken(SysYParser.ASSIGN, 0); }
-		public ExpContext exp() {
-			return getRuleContext(ExpContext.class,0);
+		@Override public int getRuleIndex() { return RULE_stmt; }
+	 
+		public StmtContext() { }
+		public void copyFrom(StmtContext ctx) {
+			super.copyFrom(ctx);
 		}
-		public TerminalNode SEMICOLON() { return getToken(SysYParser.SEMICOLON, 0); }
-		public BlockContext block() {
-			return getRuleContext(BlockContext.class,0);
-		}
+	}
+	public static class Stmt_ifContext extends StmtContext {
 		public TerminalNode IF() { return getToken(SysYParser.IF, 0); }
 		public TerminalNode L_PAREN() { return getToken(SysYParser.L_PAREN, 0); }
 		public CondContext cond() {
@@ -1351,25 +1351,163 @@ public class SysYParser extends Parser {
 			return getRuleContext(StmtContext.class,i);
 		}
 		public TerminalNode ELSE() { return getToken(SysYParser.ELSE, 0); }
-		public TerminalNode WHILE() { return getToken(SysYParser.WHILE, 0); }
-		public TerminalNode BREAK() { return getToken(SysYParser.BREAK, 0); }
-		public TerminalNode CONTINUE() { return getToken(SysYParser.CONTINUE, 0); }
-		public TerminalNode RETURN() { return getToken(SysYParser.RETURN, 0); }
-		public StmtContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_stmt; }
+		public Stmt_ifContext(StmtContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof SysYParserListener ) ((SysYParserListener)listener).enterStmt(this);
+			if ( listener instanceof SysYParserListener ) ((SysYParserListener)listener).enterStmt_if(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof SysYParserListener ) ((SysYParserListener)listener).exitStmt(this);
+			if ( listener instanceof SysYParserListener ) ((SysYParserListener)listener).exitStmt_if(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof SysYParserVisitor ) return ((SysYParserVisitor<? extends T>)visitor).visitStmt(this);
+			if ( visitor instanceof SysYParserVisitor ) return ((SysYParserVisitor<? extends T>)visitor).visitStmt_if(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class Stmt_blockContext extends StmtContext {
+		public BlockContext block() {
+			return getRuleContext(BlockContext.class,0);
+		}
+		public Stmt_blockContext(StmtContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof SysYParserListener ) ((SysYParserListener)listener).enterStmt_block(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof SysYParserListener ) ((SysYParserListener)listener).exitStmt_block(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof SysYParserVisitor ) return ((SysYParserVisitor<? extends T>)visitor).visitStmt_block(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class Stmt_breakContext extends StmtContext {
+		public TerminalNode BREAK() { return getToken(SysYParser.BREAK, 0); }
+		public TerminalNode SEMICOLON() { return getToken(SysYParser.SEMICOLON, 0); }
+		public Stmt_breakContext(StmtContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof SysYParserListener ) ((SysYParserListener)listener).enterStmt_break(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof SysYParserListener ) ((SysYParserListener)listener).exitStmt_break(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof SysYParserVisitor ) return ((SysYParserVisitor<? extends T>)visitor).visitStmt_break(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class Stmt_continueContext extends StmtContext {
+		public TerminalNode CONTINUE() { return getToken(SysYParser.CONTINUE, 0); }
+		public TerminalNode SEMICOLON() { return getToken(SysYParser.SEMICOLON, 0); }
+		public Stmt_continueContext(StmtContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof SysYParserListener ) ((SysYParserListener)listener).enterStmt_continue(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof SysYParserListener ) ((SysYParserListener)listener).exitStmt_continue(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof SysYParserVisitor ) return ((SysYParserVisitor<? extends T>)visitor).visitStmt_continue(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class Stmt_whileContext extends StmtContext {
+		public TerminalNode WHILE() { return getToken(SysYParser.WHILE, 0); }
+		public TerminalNode L_PAREN() { return getToken(SysYParser.L_PAREN, 0); }
+		public CondContext cond() {
+			return getRuleContext(CondContext.class,0);
+		}
+		public TerminalNode R_PAREN() { return getToken(SysYParser.R_PAREN, 0); }
+		public StmtContext stmt() {
+			return getRuleContext(StmtContext.class,0);
+		}
+		public Stmt_whileContext(StmtContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof SysYParserListener ) ((SysYParserListener)listener).enterStmt_while(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof SysYParserListener ) ((SysYParserListener)listener).exitStmt_while(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof SysYParserVisitor ) return ((SysYParserVisitor<? extends T>)visitor).visitStmt_while(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class Stmt_assignContext extends StmtContext {
+		public LValContext lVal() {
+			return getRuleContext(LValContext.class,0);
+		}
+		public TerminalNode ASSIGN() { return getToken(SysYParser.ASSIGN, 0); }
+		public ExpContext exp() {
+			return getRuleContext(ExpContext.class,0);
+		}
+		public TerminalNode SEMICOLON() { return getToken(SysYParser.SEMICOLON, 0); }
+		public Stmt_assignContext(StmtContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof SysYParserListener ) ((SysYParserListener)listener).enterStmt_assign(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof SysYParserListener ) ((SysYParserListener)listener).exitStmt_assign(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof SysYParserVisitor ) return ((SysYParserVisitor<? extends T>)visitor).visitStmt_assign(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class Stmt_returnContext extends StmtContext {
+		public TerminalNode RETURN() { return getToken(SysYParser.RETURN, 0); }
+		public TerminalNode SEMICOLON() { return getToken(SysYParser.SEMICOLON, 0); }
+		public ExpContext exp() {
+			return getRuleContext(ExpContext.class,0);
+		}
+		public Stmt_returnContext(StmtContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof SysYParserListener ) ((SysYParserListener)listener).enterStmt_return(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof SysYParserListener ) ((SysYParserListener)listener).exitStmt_return(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof SysYParserVisitor ) return ((SysYParserVisitor<? extends T>)visitor).visitStmt_return(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class Stmt_judgeContext extends StmtContext {
+		public TerminalNode SEMICOLON() { return getToken(SysYParser.SEMICOLON, 0); }
+		public ExpContext exp() {
+			return getRuleContext(ExpContext.class,0);
+		}
+		public Stmt_judgeContext(StmtContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof SysYParserListener ) ((SysYParserListener)listener).enterStmt_judge(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof SysYParserListener ) ((SysYParserListener)listener).exitStmt_judge(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof SysYParserVisitor ) return ((SysYParserVisitor<? extends T>)visitor).visitStmt_judge(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1383,6 +1521,7 @@ public class SysYParser extends Parser {
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,24,_ctx) ) {
 			case 1:
+				_localctx = new Stmt_assignContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(203);
@@ -1396,6 +1535,7 @@ public class SysYParser extends Parser {
 				}
 				break;
 			case 2:
+				_localctx = new Stmt_judgeContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(209);
@@ -1413,6 +1553,7 @@ public class SysYParser extends Parser {
 				}
 				break;
 			case 3:
+				_localctx = new Stmt_blockContext(_localctx);
 				enterOuterAlt(_localctx, 3);
 				{
 				setState(212);
@@ -1420,6 +1561,7 @@ public class SysYParser extends Parser {
 				}
 				break;
 			case 4:
+				_localctx = new Stmt_ifContext(_localctx);
 				enterOuterAlt(_localctx, 4);
 				{
 				setState(213);
@@ -1447,6 +1589,7 @@ public class SysYParser extends Parser {
 				}
 				break;
 			case 5:
+				_localctx = new Stmt_whileContext(_localctx);
 				enterOuterAlt(_localctx, 5);
 				{
 				setState(222);
@@ -1462,6 +1605,7 @@ public class SysYParser extends Parser {
 				}
 				break;
 			case 6:
+				_localctx = new Stmt_breakContext(_localctx);
 				enterOuterAlt(_localctx, 6);
 				{
 				setState(228);
@@ -1471,6 +1615,7 @@ public class SysYParser extends Parser {
 				}
 				break;
 			case 7:
+				_localctx = new Stmt_continueContext(_localctx);
 				enterOuterAlt(_localctx, 7);
 				{
 				setState(230);
@@ -1480,6 +1625,7 @@ public class SysYParser extends Parser {
 				}
 				break;
 			case 8:
+				_localctx = new Stmt_returnContext(_localctx);
 				enterOuterAlt(_localctx, 8);
 				{
 				setState(232);
@@ -1512,47 +1658,165 @@ public class SysYParser extends Parser {
 	}
 
 	public static class ExpContext extends ParserRuleContext {
+		public ExpContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_exp; }
+	 
+		public ExpContext() { }
+		public void copyFrom(ExpContext ctx) {
+			super.copyFrom(ctx);
+		}
+	}
+	public static class Exp_numberContext extends ExpContext {
+		public NumberContext number() {
+			return getRuleContext(NumberContext.class,0);
+		}
+		public Exp_numberContext(ExpContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof SysYParserListener ) ((SysYParserListener)listener).enterExp_number(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof SysYParserListener ) ((SysYParserListener)listener).exitExp_number(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof SysYParserVisitor ) return ((SysYParserVisitor<? extends T>)visitor).visitExp_number(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class Exp_parenContext extends ExpContext {
 		public TerminalNode L_PAREN() { return getToken(SysYParser.L_PAREN, 0); }
+		public ExpContext exp() {
+			return getRuleContext(ExpContext.class,0);
+		}
+		public TerminalNode R_PAREN() { return getToken(SysYParser.R_PAREN, 0); }
+		public Exp_parenContext(ExpContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof SysYParserListener ) ((SysYParserListener)listener).enterExp_paren(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof SysYParserListener ) ((SysYParserListener)listener).exitExp_paren(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof SysYParserVisitor ) return ((SysYParserVisitor<? extends T>)visitor).visitExp_paren(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class Exp_2Context extends ExpContext {
 		public List<ExpContext> exp() {
 			return getRuleContexts(ExpContext.class);
 		}
 		public ExpContext exp(int i) {
 			return getRuleContext(ExpContext.class,i);
 		}
-		public TerminalNode R_PAREN() { return getToken(SysYParser.R_PAREN, 0); }
-		public LValContext lVal() {
-			return getRuleContext(LValContext.class,0);
-		}
-		public NumberContext number() {
-			return getRuleContext(NumberContext.class,0);
-		}
-		public TerminalNode IDENT() { return getToken(SysYParser.IDENT, 0); }
-		public FuncRParamsContext funcRParams() {
-			return getRuleContext(FuncRParamsContext.class,0);
-		}
-		public UnaryOpContext unaryOp() {
-			return getRuleContext(UnaryOpContext.class,0);
-		}
 		public TerminalNode MUL() { return getToken(SysYParser.MUL, 0); }
 		public TerminalNode DIV() { return getToken(SysYParser.DIV, 0); }
 		public TerminalNode MOD() { return getToken(SysYParser.MOD, 0); }
-		public TerminalNode PLUS() { return getToken(SysYParser.PLUS, 0); }
-		public TerminalNode MINUS() { return getToken(SysYParser.MINUS, 0); }
-		public ExpContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_exp; }
+		public Exp_2Context(ExpContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof SysYParserListener ) ((SysYParserListener)listener).enterExp(this);
+			if ( listener instanceof SysYParserListener ) ((SysYParserListener)listener).enterExp_2(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof SysYParserListener ) ((SysYParserListener)listener).exitExp(this);
+			if ( listener instanceof SysYParserListener ) ((SysYParserListener)listener).exitExp_2(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof SysYParserVisitor ) return ((SysYParserVisitor<? extends T>)visitor).visitExp(this);
+			if ( visitor instanceof SysYParserVisitor ) return ((SysYParserVisitor<? extends T>)visitor).visitExp_2(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class Exp_1Context extends ExpContext {
+		public List<ExpContext> exp() {
+			return getRuleContexts(ExpContext.class);
+		}
+		public ExpContext exp(int i) {
+			return getRuleContext(ExpContext.class,i);
+		}
+		public TerminalNode PLUS() { return getToken(SysYParser.PLUS, 0); }
+		public TerminalNode MINUS() { return getToken(SysYParser.MINUS, 0); }
+		public Exp_1Context(ExpContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof SysYParserListener ) ((SysYParserListener)listener).enterExp_1(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof SysYParserListener ) ((SysYParserListener)listener).exitExp_1(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof SysYParserVisitor ) return ((SysYParserVisitor<? extends T>)visitor).visitExp_1(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class Exp_lValContext extends ExpContext {
+		public LValContext lVal() {
+			return getRuleContext(LValContext.class,0);
+		}
+		public Exp_lValContext(ExpContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof SysYParserListener ) ((SysYParserListener)listener).enterExp_lVal(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof SysYParserListener ) ((SysYParserListener)listener).exitExp_lVal(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof SysYParserVisitor ) return ((SysYParserVisitor<? extends T>)visitor).visitExp_lVal(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class Exp_funcContext extends ExpContext {
+		public TerminalNode IDENT() { return getToken(SysYParser.IDENT, 0); }
+		public TerminalNode L_PAREN() { return getToken(SysYParser.L_PAREN, 0); }
+		public TerminalNode R_PAREN() { return getToken(SysYParser.R_PAREN, 0); }
+		public FuncRParamsContext funcRParams() {
+			return getRuleContext(FuncRParamsContext.class,0);
+		}
+		public Exp_funcContext(ExpContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof SysYParserListener ) ((SysYParserListener)listener).enterExp_func(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof SysYParserListener ) ((SysYParserListener)listener).exitExp_func(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof SysYParserVisitor ) return ((SysYParserVisitor<? extends T>)visitor).visitExp_func(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class Exp_unaryContext extends ExpContext {
+		public UnaryOpContext unaryOp() {
+			return getRuleContext(UnaryOpContext.class,0);
+		}
+		public ExpContext exp() {
+			return getRuleContext(ExpContext.class,0);
+		}
+		public Exp_unaryContext(ExpContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof SysYParserListener ) ((SysYParserListener)listener).enterExp_unary(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof SysYParserListener ) ((SysYParserListener)listener).exitExp_unary(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof SysYParserVisitor ) return ((SysYParserVisitor<? extends T>)visitor).visitExp_unary(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1578,6 +1842,10 @@ public class SysYParser extends Parser {
 			switch ( getInterpreter().adaptivePredict(_input,26,_ctx) ) {
 			case 1:
 				{
+				_localctx = new Exp_parenContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
+
 				setState(240);
 				match(L_PAREN);
 				setState(241);
@@ -1588,18 +1856,27 @@ public class SysYParser extends Parser {
 				break;
 			case 2:
 				{
+				_localctx = new Exp_lValContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
 				setState(244);
 				lVal();
 				}
 				break;
 			case 3:
 				{
+				_localctx = new Exp_numberContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
 				setState(245);
 				number();
 				}
 				break;
 			case 4:
 				{
+				_localctx = new Exp_funcContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
 				setState(246);
 				match(IDENT);
 				setState(247);
@@ -1620,6 +1897,9 @@ public class SysYParser extends Parser {
 				break;
 			case 5:
 				{
+				_localctx = new Exp_unaryContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
 				setState(252);
 				unaryOp();
 				setState(253);
@@ -1641,7 +1921,7 @@ public class SysYParser extends Parser {
 					switch ( getInterpreter().adaptivePredict(_input,27,_ctx) ) {
 					case 1:
 						{
-						_localctx = new ExpContext(_parentctx, _parentState);
+						_localctx = new Exp_2Context(new ExpContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_exp);
 						setState(257);
 						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
@@ -1661,7 +1941,7 @@ public class SysYParser extends Parser {
 						break;
 					case 2:
 						{
-						_localctx = new ExpContext(_parentctx, _parentState);
+						_localctx = new Exp_1Context(new ExpContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_exp);
 						setState(260);
 						if (!(precpred(_ctx, 1))) throw new FailedPredicateException(this, "precpred(_ctx, 1)");

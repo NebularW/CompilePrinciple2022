@@ -109,19 +109,112 @@ public interface SysYParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitBlockItem(SysYParser.BlockItemContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SysYParser#stmt}.
+	 * Visit a parse tree produced by the {@code stmt_assign}
+	 * labeled alternative in {@link SysYParser#stmt}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitStmt(SysYParser.StmtContext ctx);
+	T visitStmt_assign(SysYParser.Stmt_assignContext ctx);
 	/**
-	 * Visit a parse tree produced by .
+	 * Visit a parse tree produced by the {@code stmt_judge}
+	 * labeled alternative in {@link SysYParser#stmt}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitExp(SysYParser.ExpContext ctx);
+	T visitStmt_judge(SysYParser.Stmt_judgeContext ctx);
 	/**
-	 * Visit a parse tree produced by .
+	 * Visit a parse tree produced by the {@code stmt_block}
+	 * labeled alternative in {@link SysYParser#stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStmt_block(SysYParser.Stmt_blockContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code stmt_if}
+	 * labeled alternative in {@link SysYParser#stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStmt_if(SysYParser.Stmt_ifContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code stmt_while}
+	 * labeled alternative in {@link SysYParser#stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStmt_while(SysYParser.Stmt_whileContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code stmt_break}
+	 * labeled alternative in {@link SysYParser#stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStmt_break(SysYParser.Stmt_breakContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code stmt_continue}
+	 * labeled alternative in {@link SysYParser#stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStmt_continue(SysYParser.Stmt_continueContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code stmt_return}
+	 * labeled alternative in {@link SysYParser#stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStmt_return(SysYParser.Stmt_returnContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code exp_number}
+	 * labeled alternative in {@link SysYParser#exp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExp_number(SysYParser.Exp_numberContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code exp_paren}
+	 * labeled alternative in {@link SysYParser#exp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExp_paren(SysYParser.Exp_parenContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code exp_2}
+	 * labeled alternative in {@link SysYParser#exp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExp_2(SysYParser.Exp_2Context ctx);
+	/**
+	 * Visit a parse tree produced by the {@code exp_1}
+	 * labeled alternative in {@link SysYParser#exp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExp_1(SysYParser.Exp_1Context ctx);
+	/**
+	 * Visit a parse tree produced by the {@code exp_lVal}
+	 * labeled alternative in {@link SysYParser#exp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExp_lVal(SysYParser.Exp_lValContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code exp_func}
+	 * labeled alternative in {@link SysYParser#exp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExp_func(SysYParser.Exp_funcContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code exp_unary}
+	 * labeled alternative in {@link SysYParser#exp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExp_unary(SysYParser.Exp_unaryContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SysYParser#cond}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */

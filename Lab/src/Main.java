@@ -27,7 +27,7 @@ public class Main {
         //使用visitor
         ParseTree tree = sysYParser.program();
         MyVisitor visitor = new MyVisitor(sysYParser.getRuleNames(), sysYLexer.getVocabulary());
-        visitor.visit(tree);
+//        visitor.visit(tree);
 
 
         //使用listener
