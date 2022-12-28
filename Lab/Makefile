@@ -13,22 +13,10 @@ LFILE = $(shell find . -name "SysYLexer.g4")
 JAVAFILE = $(shell find . -name "*.java")
 ANTLRPATH = $(shell find /usr/local/lib -name "antlr-*-complete.jar")
 
-compile: antlr
-	$(call git_commit,"make")
-	mkdir -p classes
-	$(JAVAC) $(JAVAFILE) -d classes
-
-run: compile
-	$(JAVAC) -classpath $(ANTLRPATH) $(JAVAFILE) -d classes
-
 
 antlr: $(LFILE) $(PFILE) 
 	$(ANTLR) $(PFILE) $(LFILE)
 
-
-test: compile
-	$(call git_commit, "test")
-	nohup java -classpath ./classes:$(ANTLRPATH) Main ./tests/test1.sysy &
 
 
 clean:
@@ -44,9 +32,11 @@ clean:
 
 submit: clean
 	git gc
-	bash -c ./submit.sh
+	git commit -am "submit"
+	bash submit.sh
 
 
-.PHONY: compile antlr test run clean submit
+
+.PHONY:  antlr clean submit
 
 

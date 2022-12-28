@@ -214,11 +214,40 @@ public interface SysYParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitExp_unary(SysYParser.Exp_unaryContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SysYParser#cond}.
+	 * Visit a parse tree produced by the {@code cond_4}
+	 * labeled alternative in {@link SysYParser#cond}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitCond(SysYParser.CondContext ctx);
+	T visitCond_4(SysYParser.Cond_4Context ctx);
+	/**
+	 * Visit a parse tree produced by the {@code cond_3}
+	 * labeled alternative in {@link SysYParser#cond}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCond_3(SysYParser.Cond_3Context ctx);
+	/**
+	 * Visit a parse tree produced by the {@code cond_2}
+	 * labeled alternative in {@link SysYParser#cond}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCond_2(SysYParser.Cond_2Context ctx);
+	/**
+	 * Visit a parse tree produced by the {@code cond_exp}
+	 * labeled alternative in {@link SysYParser#cond}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCond_exp(SysYParser.Cond_expContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code cond_1}
+	 * labeled alternative in {@link SysYParser#cond}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCond_1(SysYParser.Cond_1Context ctx);
 	/**
 	 * Visit a parse tree produced by {@link SysYParser#lVal}.
 	 * @param ctx the parse tree
