@@ -22,3 +22,4 @@ pom.xml
 /src/antlr/SysYParser.interp
 /src/antlr/SysYParser.tokens
 /.idea/
+*.log
