@@ -1,7 +1,4 @@
-int a[16]={1};
-int func(){
-    return func();
-}
-int main(){
-    a[1]=1;
+int main() {
+    int a=0;
+    return a;
 }
