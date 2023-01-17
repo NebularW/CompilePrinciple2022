@@ -8,7 +8,6 @@ import symbol.*;
 
 
 import java.util.List;
-import java.util.Stack;
 
 import static org.bytedeco.llvm.global.LLVM.*;
 
@@ -17,8 +16,6 @@ public class MyVisitor extends SysYParserBaseVisitor<LLVMValueRef> {
     private Scope currentScope = null;
     private int localScopeCounter = 0;
     private LLVMValueRef currentFunction;
-    private final Stack<LLVMBasicBlockRef> entryStack = new Stack<>();
-    private final Stack<LLVMBasicBlockRef> conditionStack = new Stack<>();
     //输出路径
     String dest;
     //创建module
@@ -492,9 +489,9 @@ public class MyVisitor extends SysYParserBaseVisitor<LLVMValueRef> {
 
     @Override
     public LLVMValueRef visitCond_or(SysYParser.Cond_orContext ctx) {
-        LLVMValueRef lVal = visit(ctx.cond(0));
-        LLVMValueRef rVal = visit(ctx.cond(1));
-        LLVMValueRef cmpResult = LLVMBuildOr(builder, lVal, rVal, "OR");
+        LLVMValueRef lVal = this.visit(ctx.cond(0));
+        LLVMValueRef rVal = this.visit(ctx.cond(1));
+        LLVMValueRef cmpResult = LLVMBuildICmp(builder, LLVMOr, lVal, rVal, "OR");
         return LLVMBuildZExt(builder, cmpResult, i32Type, "ext");
     }
 
@@ -502,53 +499,8 @@ public class MyVisitor extends SysYParserBaseVisitor<LLVMValueRef> {
     public LLVMValueRef visitCond_and(SysYParser.Cond_andContext ctx) {
         LLVMValueRef lVal = this.visit(ctx.cond(0));
         LLVMValueRef rVal = this.visit(ctx.cond(1));
-        LLVMValueRef cmpResult = LLVMBuildAnd(builder, lVal, rVal, "AND");
+        LLVMValueRef cmpResult = LLVMBuildICmp(builder, LLVMAnd, lVal, rVal, "AND");
         return LLVMBuildZExt(builder, cmpResult, i32Type, "ext");
     }
 
-    @Override
-    public LLVMValueRef visitStmt_while(SysYParser.Stmt_whileContext ctx) {
-
-        // 创建label
-        LLVMBasicBlockRef whileCondition = LLVMAppendBasicBlock(currentFunction, "whileCondition");
-        LLVMBasicBlockRef whileBody = LLVMAppendBasicBlock(currentFunction, "whileBody");
-        LLVMBasicBlockRef entry = LLVMAppendBasicBlock(currentFunction, "entry");
-        entryStack.push(entry);
-        conditionStack.push(whileCondition);
-
-        // 分支
-        LLVMBuildBr(builder, whileCondition);
-
-        // whileCondition
-        LLVMPositionBuilderAtEnd(builder, whileCondition);
-        LLVMValueRef condVal = this.visit(ctx.cond());
-        LLVMValueRef cmpResult = LLVMBuildICmp(builder, LLVMIntNE, zero, condVal, "cmp_result");
-        LLVMBuildCondBr(builder, cmpResult, whileBody, entry);
-
-        // whileBody
-        LLVMPositionBuilderAtEnd(builder, whileBody);
-        visit(ctx.stmt());
-        LLVMBuildBr(builder, whileCondition);
-
-        // entry
-        LLVMPositionBuilderAtEnd(builder, entry);
-
-        if(entryStack.contains(entry)) entryStack.pop();
-        if(conditionStack.contains(whileCondition)) conditionStack.pop();
-        return null;
-    }
-
-    @Override
-    public LLVMValueRef visitStmt_break(SysYParser.Stmt_breakContext ctx) {
-        LLVMBasicBlockRef entry = entryStack.pop();
-        LLVMBuildBr(builder, entry);
-        return null;
-    }
-
-    @Override
-    public LLVMValueRef visitStmt_continue(SysYParser.Stmt_continueContext ctx) {
-        LLVMBasicBlockRef whileCondition = conditionStack.peek();
-        LLVMBuildBr(builder, whileCondition);
-        return null;
-    }
 }

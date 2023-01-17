@@ -1,11 +1,12 @@
-int main(){
-    int a=0;
-    int count=0;
-    while(a<=0 || count== 10){
-        a=a-1;
-        count=count+1;
-        if(a<-20)
-           continue;
-    }
-    return count;
+int a,b,c;
+int main() {
+   a=1;
+   b=2;
+   c=3;
+   if(a<b<c){
+     c = 5;
+   }else{
+   c = 0;
+   }
+   return c;
 }
