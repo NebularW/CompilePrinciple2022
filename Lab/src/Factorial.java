@@ -52,7 +52,7 @@ import static org.bytedeco.llvm.global.LLVM.*;
  * 5. Executing the code with the LLVM MCJIT Compiler
  * 6. Dispose of the allocated resources
  * <p>
- * 3
+ * TODO(supergrecko): Replace with new Pass Manager for LLVM 13
  */
 public class Factorial {
     // a 'char *' used to retrieve error messages from LLVM
@@ -88,10 +88,10 @@ public class Factorial {
         LLVMBuildCondBr(builder, condition, exit, ifFalse);
 
         LLVMPositionBuilderAtEnd(builder, ifFalse);
-        LLVMValueRef nMinusOne = LLVMBuildSub(builder, n, one, "f");
+        LLVMValueRef nMinusOne = LLVMBuildSub(builder, n, one, "nMinusOne = n - 1");
         PointerPointer<Pointer> arguments = new PointerPointer<>(1)
                 .put(0, nMinusOne);
-        LLVMValueRef factorialResult = LLVMBuildCall2(builder, factorialType, factorial, arguments, 1, "factorialResult");
+        LLVMValueRef factorialResult = LLVMBuildCall2(builder, factorialType, factorial, arguments, 1, "factorialResult = factorial(nMinusOne)");
         LLVMValueRef resultIfFalse = LLVMBuildMul(builder, n, factorialResult, "resultIfFalse = n * factorialResult");
         LLVMBuildBr(builder, exit);
 
@@ -120,25 +120,25 @@ public class Factorial {
         LLVMRunPassManager(pm, module);
         LLVMDumpModule(module);
 
-        // Stage 5: Execute the code using MCJIT
-        LLVMExecutionEngineRef engine = new LLVMExecutionEngineRef();
-        LLVMMCJITCompilerOptions options = new LLVMMCJITCompilerOptions();
-        if (LLVMCreateMCJITCompilerForModule(engine, module, options, 3, error) != 0) {
-            System.err.println("Failed to create JIT compiler: " + error.getString());
-            LLVMDisposeMessage(error);
-            return;
-        }
-
-        LLVMGenericValueRef argument = LLVMCreateGenericValueOfInt(i32Type, 10, /* signExtend */ 0);
-        LLVMGenericValueRef result = LLVMRunFunction(engine, factorial, /* argumentCount */ 1, argument);
-        System.out.println();
-        System.out.println("; Running factorial(10) with MCJIT...");
-        System.out.println("; Result: " + LLVMGenericValueToInt(result, /* signExtend */ 0));
-
-        // Stage 6: Dispose of the allocated resources
-        LLVMDisposeExecutionEngine(engine);
-        LLVMDisposePassManager(pm);
-        LLVMDisposeBuilder(builder);
-        LLVMContextDispose(context);
+//        // Stage 5: Execute the code using MCJIT
+//        LLVMExecutionEngineRef engine = new LLVMExecutionEngineRef();
+//        LLVMMCJITCompilerOptions options = new LLVMMCJITCompilerOptions();
+//        if (LLVMCreateMCJITCompilerForModule(engine, module, options, 3, error) != 0) {
+//            System.err.println("Failed to create JIT compiler: " + error.getString());
+//            LLVMDisposeMessage(error);
+//            return;
+//        }
+//
+//        LLVMGenericValueRef argument = LLVMCreateGenericValueOfInt(i32Type, 10, /* signExtend */ 0);
+//        LLVMGenericValueRef result = LLVMRunFunction(engine, factorial, /* argumentCount */ 1, argument);
+//        System.out.println();
+//        System.out.println("; Running factorial(10) with MCJIT...");
+//        System.out.println("; Result: " + LLVMGenericValueToInt(result, /* signExtend */ 0));
+//
+//        // Stage 6: Dispose of the allocated resources
+//        LLVMDisposeExecutionEngine(engine);
+//        LLVMDisposePassManager(pm);
+//        LLVMDisposeBuilder(builder);
+//        LLVMContextDispose(context);
     }
 }
