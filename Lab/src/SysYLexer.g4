@@ -1,4 +1,5 @@
 lexer grammar SysYLexer;
+@header{}
 
 CONST : 'const';
 
@@ -66,7 +67,7 @@ SEMICOLON : ';';
 
 IDENT : ('_'|[a-zA-Z]) [_a-zA-Z0-9]* ;
 
-INTEGR_CONST : (('0x'|'0X')[0-9a-fA-F]+)|([1-9][0-9]*)|('0'[0-7]+)|'0' ;
+INTEGR_CONST : (('0x'|'0X')[0-9a-fA-F]*)|([1-9][0-9]*)|('0'[0-7]*)|'0' ;
 
 WS : [ \r\n\t]+ -> skip ;
 

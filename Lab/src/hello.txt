@@ -1,4 +1,4 @@
 int main(){
-    int a[];
-    return a][;
+  int ``;
+  int a= ~1;
 }
