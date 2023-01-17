@@ -98,10 +98,10 @@ exp
 
 cond
    : exp                                #cond_exp
-   | cond (LT | GT | LE | GE) cond      #cond_compare
-   | cond (EQ | NEQ) cond               #cond_eq
-   | cond AND cond                      #cond_and
-   | cond OR cond                       #cond_or
+   | cond (LT | GT | LE | GE) cond      #cond_1
+   | cond (EQ | NEQ) cond               #cond_2
+   | cond AND cond                      #cond_3
+   | cond OR cond                       #cond_4
    ;
 
 lVal
