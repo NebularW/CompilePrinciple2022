@@ -4,7 +4,6 @@ import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerPointer;
 import org.bytedeco.llvm.LLVM.*;
-import org.bytedeco.llvm.global.LLVM;
 import symbol.*;
 
 
@@ -29,7 +28,6 @@ public class MyVisitor extends SysYParserBaseVisitor<LLVMValueRef> {
     //考虑到我们的语言中仅存在int一个基本类型，可以通过下面的语句为LLVM的int型重命名方便以后使用
     LLVMTypeRef i32Type = LLVMInt32Type();
     LLVMTypeRef voidType = LLVMVoidType();
-    LLVMTypeRef pointerType = LLVMPointerType(i32Type, 0);
     //用于输出到文件
     public static final BytePointer error = new BytePointer();
     // 常量
@@ -71,12 +69,7 @@ public class MyVisitor extends SysYParserBaseVisitor<LLVMValueRef> {
         int argumentSize = ctx.funcFParams() == null ? 0 : ctx.funcFParams().funcFParam().size();
         PointerPointer<Pointer> argumentTypes = new PointerPointer<>(argumentSize);
         for (int i = 0; i < argumentSize; i++) {
-            if (ctx.funcFParams().funcFParam(i).L_BRACKT().size() == 0) {
-                argumentTypes.put(i, i32Type);
-            } else {
-                argumentTypes.put(i, pointerType);
-            }
-
+            argumentTypes.put(i, i32Type);
         }
         //生成函数类型
         LLVMTypeRef ft = LLVMFunctionType(returnType, argumentTypes, /* argumentCount */ argumentSize, /* isVariadic */ 0);
@@ -121,32 +114,17 @@ public class MyVisitor extends SysYParserBaseVisitor<LLVMValueRef> {
     public LLVMValueRef visitFuncFParams(SysYParser.FuncFParamsContext ctx) {
         int size = ctx.funcFParam().size();
         for (int i = 0; i < size; i++) {
-            if (ctx.funcFParam(i).L_BRACKT().size() == 0) {
-                //int型变量
-                //申请一块能存放int型的内存
-                LLVMValueRef pointer = LLVMBuildAlloca(builder, i32Type, /*pointerName:String*/"pointer_" + ctx.funcFParam(i).IDENT().toString());
-                //将数值存入该内存
-                SysYParser.FuncDefContext funcDefContext = (SysYParser.FuncDefContext) ctx.parent;
-                Symbol func = currentScope.resolve(funcDefContext.IDENT().toString(), false);
-                LLVMValueRef valueRef = LLVMGetParam(func.getVal(), /* parameterIndex */i);
-                LLVMBuildStore(builder, valueRef, pointer);
-                // 变量存入符号表
-                BaseSymbol varSymbol = new BaseSymbol(ctx.funcFParam(i).IDENT().toString(), pointer, i32Type);
-                currentScope.define(varSymbol);
-            } else {
-                //数组型变量
-                //申请一块能存放int型指针的内存
-                LLVMValueRef pointer = LLVMBuildAlloca(builder, pointerType, /*pointerName:String*/"pointer_" + ctx.funcFParam(i).IDENT().toString());
-                //将数值存入该内存
-                SysYParser.FuncDefContext funcDefContext = (SysYParser.FuncDefContext) ctx.parent;
-                Symbol func = currentScope.resolve(funcDefContext.IDENT().toString(), false);
-                LLVMValueRef valueRef = LLVMGetParam(func.getVal(), /* parameterIndex */i);
-                LLVMBuildStore(builder, valueRef, pointer);
-                // 变量存入符号表
-                BaseSymbol varSymbol = new BaseSymbol(ctx.funcFParam(i).IDENT().toString(), pointer, pointerType);
-                currentScope.define(varSymbol);
-            }
-
+            //int型变量
+            //申请一块能存放int型的内存
+            LLVMValueRef pointer = LLVMBuildAlloca(builder, i32Type, /*pointerName:String*/"pointer_" + ctx.funcFParam(i).IDENT().toString());
+            //将数值存入该内存
+            SysYParser.FuncDefContext funcDefContext = (SysYParser.FuncDefContext) ctx.parent;
+            Symbol func = currentScope.resolve(funcDefContext.IDENT().toString(), false);
+            LLVMValueRef valueRef = LLVMGetParam(func.getVal(), /* parameterIndex */i);
+            LLVMBuildStore(builder, valueRef, pointer);
+            // 变量存入符号表
+            BaseSymbol varSymbol = new BaseSymbol(ctx.funcFParam(i).IDENT().toString(), pointer);
+            currentScope.define(varSymbol);
         }
         return null;
     }
@@ -170,7 +148,6 @@ public class MyVisitor extends SysYParserBaseVisitor<LLVMValueRef> {
     @Override
     public LLVMValueRef visitConstDef(SysYParser.ConstDefContext ctx) {
         LLVMValueRef pointer;
-        BaseSymbol symbol;
         // 判断是否是全局变量
         if (currentScope == globalScope) {
             // 全局单变量
@@ -183,7 +160,6 @@ public class MyVisitor extends SysYParserBaseVisitor<LLVMValueRef> {
                     pointer = LLVMAddGlobal(module, i32Type, ctx.IDENT().getText());
                     LLVMSetInitializer(pointer, zero);
                 }
-                symbol = new BaseSymbol(ctx.IDENT().toString(), pointer, i32Type);
             } else {
                 // 全局数组变量
                 int size = Integer.parseInt(ctx.constExp().get(0).exp().getText());
@@ -203,7 +179,6 @@ public class MyVisitor extends SysYParserBaseVisitor<LLVMValueRef> {
                 // 初始化数组
                 pointer = LLVMAddGlobal(module, arrayType, ctx.IDENT().getText());
                 LLVMSetInitializer(pointer, initVal);
-                symbol = new BaseSymbol(ctx.IDENT().toString(), pointer, arrayType);
             }
         } else {
             // 判断是int还是数组，翻译局部变量
@@ -216,7 +191,6 @@ public class MyVisitor extends SysYParserBaseVisitor<LLVMValueRef> {
                     LLVMValueRef initVal = visit(ctx.constInitVal());
                     LLVMBuildStore(builder, initVal, pointer);
                 }
-                symbol = new BaseSymbol(ctx.IDENT().toString(), pointer, i32Type);
             } else {
                 //数组变量
                 int size = Integer.parseInt(ctx.constExp().get(0).exp().getText());
@@ -241,10 +215,10 @@ public class MyVisitor extends SysYParserBaseVisitor<LLVMValueRef> {
                     LLVMValueRef elementPtr = LLVMBuildGEP(builder, pointer, valuePointer, 2, "GEP_" + i);
                     LLVMBuildStore(builder, initVal[i], elementPtr);
                 }
-                symbol = new BaseSymbol(ctx.IDENT().toString(), pointer, arrayType);
             }
         }
 
+        BaseSymbol symbol = new BaseSymbol(ctx.IDENT().toString(), pointer);
         currentScope.define(symbol);
         return pointer;
     }
@@ -252,7 +226,6 @@ public class MyVisitor extends SysYParserBaseVisitor<LLVMValueRef> {
     @Override
     public LLVMValueRef visitVarDef(SysYParser.VarDefContext ctx) {
         LLVMValueRef pointer;
-        BaseSymbol symbol;
         // 判断是否是全局变量
         if (currentScope == globalScope) {
             // 全局单变量
@@ -265,7 +238,6 @@ public class MyVisitor extends SysYParserBaseVisitor<LLVMValueRef> {
                     pointer = LLVMAddGlobal(module, i32Type, ctx.IDENT().getText());
                     LLVMSetInitializer(pointer, zero);
                 }
-                symbol = new BaseSymbol(ctx.IDENT().toString(), pointer, i32Type);
             } else {
                 // 全局数组变量
                 int size = Integer.parseInt(ctx.constExp().get(0).exp().getText());
@@ -285,7 +257,6 @@ public class MyVisitor extends SysYParserBaseVisitor<LLVMValueRef> {
                 // 初始化数组
                 pointer = LLVMAddGlobal(module, arrayType, ctx.IDENT().getText());
                 LLVMSetInitializer(pointer, initVal);
-                symbol = new BaseSymbol(ctx.IDENT().toString(), pointer, arrayType);
             }
         } else {
             // 判断是int还是数组，翻译局部变量
@@ -298,7 +269,6 @@ public class MyVisitor extends SysYParserBaseVisitor<LLVMValueRef> {
                     LLVMValueRef initVal = visit(ctx.initVal());
                     LLVMBuildStore(builder, initVal, pointer);
                 }
-                symbol = new BaseSymbol(ctx.IDENT().toString(), pointer, i32Type);
             } else {
                 //数组变量
                 int size = Integer.parseInt(ctx.constExp().get(0).exp().getText());
@@ -323,9 +293,9 @@ public class MyVisitor extends SysYParserBaseVisitor<LLVMValueRef> {
                     LLVMValueRef elementPtr = LLVMBuildGEP(builder, pointer, valuePointer, 2, "GEP_" + i);
                     LLVMBuildStore(builder, initVal[i], elementPtr);
                 }
-                symbol = new BaseSymbol(ctx.IDENT().toString(), pointer, arrayType);
             }
         }
+        BaseSymbol symbol = new BaseSymbol(ctx.IDENT().toString(), pointer);
         currentScope.define(symbol);
         return pointer;
     }
@@ -416,50 +386,20 @@ public class MyVisitor extends SysYParserBaseVisitor<LLVMValueRef> {
         Symbol var = currentScope.resolve(ctx.IDENT().getText(), false);
         LLVMValueRef varVal = var.getVal();
         if (ctx.L_BRACKT().size() == 0) {
-            if (var.getType().equals(i32Type)) {
-                // 单变量
-                if (ctx.getParent() instanceof SysYParser.Stmt_assignContext) {
-                    return varVal;
-                }
-                return LLVMBuildLoad(builder, varVal, /*varName:String*/ctx.IDENT().getText());
-            } else {
-                // 不带下标的数组变量
-                if(var.getType().equals(pointerType)){
-                    varVal = LLVMBuildLoad(builder, varVal, ctx.IDENT().getText());
-                    return varVal;
-                }else{
-                    LLVMValueRef[] arrayPointer = new LLVMValueRef[2];
-                    arrayPointer[0] = zero;
-                    arrayPointer[1] = zero;
-                    PointerPointer<LLVMValueRef> valuePointer = new PointerPointer<>(arrayPointer);
-                    LLVMValueRef valueRef = LLVMBuildGEP(builder, varVal, valuePointer, 2, "GEP_" + ctx.IDENT().getText());
-                    return valueRef;
-                }
-
+            if (ctx.getParent() instanceof SysYParser.Stmt_assignContext) {
+                return varVal;
             }
-
+            return LLVMBuildLoad(builder, varVal, /*varName:String*/ctx.IDENT().getText());
         } else {
-            // 带下标的数组变量
-            if (var.getType().equals(pointerType)) {
-                LLVMValueRef index = visit(ctx.exp(0));
-                varVal = LLVMBuildLoad(builder, varVal, ctx.IDENT().getText());
-                LLVMValueRef elementPtr = LLVMBuildGEP(builder, varVal, index, 1, new BytePointer(1));
-                if (ctx.getParent() instanceof SysYParser.Stmt_assignContext) {
-                    return elementPtr;
-                }
-                return LLVMBuildLoad(builder, elementPtr, /*varName:String*/ctx.IDENT().getText() + 1);
-            }else{
-                LLVMValueRef[] arrayPointer = new LLVMValueRef[2];
-                arrayPointer[0] = zero;
-                arrayPointer[1] = visit(ctx.exp(0));
-                PointerPointer<LLVMValueRef> valuePointer = new PointerPointer<>(arrayPointer);
-                LLVMValueRef elementPtr = LLVMBuildGEP(builder, varVal, valuePointer, 2, ctx.IDENT().getText() + "[" + ctx.exp(0).getText() + "]");
-                if (ctx.getParent() instanceof SysYParser.Stmt_assignContext) {
-                    return elementPtr;
-                }
-                return LLVMBuildLoad(builder, elementPtr, /*varName:String*/ctx.IDENT().getText() + 1);
+            LLVMValueRef[] arrayPointer = new LLVMValueRef[2];
+            arrayPointer[0] = zero;
+            arrayPointer[1] = visit(ctx.exp(0));
+            PointerPointer<LLVMValueRef> valuePointer = new PointerPointer<>(arrayPointer);
+            LLVMValueRef elementPtr = LLVMBuildGEP(builder, varVal, valuePointer, 2, ctx.IDENT().getText() + "[" + ctx.exp(0).getText() + "]");
+            if (ctx.getParent() instanceof SysYParser.Stmt_assignContext) {
+                return elementPtr;
             }
-
+            return LLVMBuildLoad(builder, elementPtr, /*varName:String*/ctx.IDENT().getText() + 1);
         }
     }
 
@@ -593,8 +533,8 @@ public class MyVisitor extends SysYParserBaseVisitor<LLVMValueRef> {
         // entry
         LLVMPositionBuilderAtEnd(builder, entry);
 
-        if (entryStack.contains(entry)) entryStack.pop();
-        if (conditionStack.contains(whileCondition)) conditionStack.pop();
+        if(entryStack.contains(entry)) entryStack.pop();
+        if(conditionStack.contains(whileCondition)) conditionStack.pop();
         return null;
     }
 

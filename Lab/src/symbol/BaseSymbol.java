@@ -1,20 +1,16 @@
 package symbol;
 
 
-import org.bytedeco.llvm.LLVM.LLVMTypeRef;
 import org.bytedeco.llvm.LLVM.LLVMValueRef;
 
 public class BaseSymbol implements Symbol {
     final String name;
     LLVMValueRef valueRef;
 
-    LLVMTypeRef typeRef;
 
-
-    public BaseSymbol(String name, LLVMValueRef valueRef, LLVMTypeRef typeRef) {
+    public BaseSymbol(String name, LLVMValueRef valueRef) {
         this.name = name;
         this.valueRef = valueRef;
-        this.typeRef = typeRef;
     }
 
 
@@ -29,7 +25,7 @@ public class BaseSymbol implements Symbol {
     }
 
     @Override
-    public LLVMTypeRef getType() {
-        return typeRef;
+    public void setVal(LLVMValueRef valueRef) {
+        this.valueRef = valueRef;
     }
 }

@@ -1,6 +1,5 @@
 package symbol;
 
-import org.bytedeco.llvm.LLVM.LLVMTypeRef;
 import org.bytedeco.llvm.LLVM.LLVMValueRef;
 
 
@@ -9,5 +8,5 @@ public interface Symbol {
 
     public LLVMValueRef getVal();
 
-    public LLVMTypeRef getType();
+    public void setVal(LLVMValueRef valueRef);
 }

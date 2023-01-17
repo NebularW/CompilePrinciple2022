@@ -37,7 +37,12 @@ public class FuncSymbol extends BaseScope implements Symbol{
         return valueRef;
     }
 
-    public LLVMTypeRef getType(){
+    @Override
+    public void setVal(LLVMValueRef valueRef) {
+        this.valueRef = valueRef;
+    }
+
+    public LLVMTypeRef getFuncType(){
         return funcType;
     }
 
